@@ -1,0 +1,6 @@
+*
+!.gitignore
+!/ps-1
+/ps-1/*
+!ps-1/plot_gaussian.py
+!ps-1/gaussian.png
