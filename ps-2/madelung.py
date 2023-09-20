@@ -1,5 +1,9 @@
+# HW 2, Q 2
+# Newman Excercise 2.9, P74
+# the Mandelung constant
+
 import numpy as np
-from timeit import timeit
+import timeit
 def madelung_for(_L):
     '''
     calculate madelung constant for electrical potential in a lattice
@@ -36,7 +40,16 @@ def madelung_mesh(_L):
     return np.sum(potential_mat)
 
 
-L = 50
+L = 100
 print(f"L: {L}")
-print(f"result by for loop: {madelung_for(L)}")
-print(f"result by meshgrid: {madelung_mesh(L)}")
+const_for = None
+const_mesh = None
+start_time = timeit.default_timer()
+const_for = madelung_for(L)
+t_for = timeit.default_timer() - start_time
+start_time = timeit.default_timer()
+const_mesh = madelung_mesh(L)
+t_mesh = timeit.default_timer() - start_time
+
+print(f"for loop result: {const_for}, time: {t_for} seconds")
+print(f"meshgrid result: {const_mesh}, time: {t_mesh} seconds")
