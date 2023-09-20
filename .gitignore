@@ -5,3 +5,10 @@
 !ps-1/plot_gaussian.py
 !ps-1/gaussian.png
 !ps-1/ComputationalPhysicsHW1.pdf
+!/ps-2
+/ps-2/*
+!ps-2/floating_point.py
+!ps-2/madelung.py
+!ps-2/mandelbrot.py
+!ps-2/quadratic.py
+!ps-2/test_quadratic.py
