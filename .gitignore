@@ -1,10 +1,12 @@
 *
 !.gitignore
+
 !/ps-1
 /ps-1/*
 !ps-1/plot_gaussian.py
 !ps-1/gaussian.png
 !ps-1/ComputationalPhysicsHW1.pdf
+
 !/ps-2
 /ps-2/*
 !ps-2/floating_point.py
@@ -13,3 +15,10 @@
 !ps-2/quadratic.py
 !ps-2/test_quadratic.py
 !ps-2/mandelbrot.png
+
+!/ps-3
+/ps-3/*
+!ps-3/derivatives.py
+!ps-3/matrix_multiplication.py
+!ps-3/matmul-loop.png
+!ps-3/matnul-np.png
