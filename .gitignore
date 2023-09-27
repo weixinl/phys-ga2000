@@ -20,5 +20,11 @@
 /ps-3/*
 !ps-3/derivatives.py
 !ps-3/matrix_multiplication.py
-!ps-3/matmul-loop.png
-!ps-3/matnul-np.png
+!ps-3/matmult-loop.png
+!ps-3/matmult-np.png
+!ps-3/matmult-loop-log.png
+!ps-3/matmult-np-log.png
+!ps-3/decay.py
+!ps-3/decay.png
+!ps-3/decay_transformation.py
+!ps-3/decay-transform.png
