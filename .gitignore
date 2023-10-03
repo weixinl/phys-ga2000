@@ -28,3 +28,9 @@
 !ps-3/decay.png
 !ps-3/decay_transformation.py
 !ps-3/decay-transform.png
+
+!/ps-4
+/ps-4/*
+!ps-4/heat_capacity.py
+!ps-4/anharmonic.py
+!ps-4/uncertainty.py
