@@ -5,7 +5,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-# from heat_capacity import *
+import quadrature
 from scipy.special import roots_hermite
 
 def H(n,x):
@@ -57,17 +57,39 @@ def integrandc(x, n = 5):
     integrand of question c
     input n: energy level
     '''
-    return  x * x / (pow(2, n)* math.factorial(n) * math.sqrt(math.pi)) * pow(H(n, x), 2)
+    return  pow(np.sin(x), 2) * np.exp(-pow(np.tan(x), 2))*pow(H(n, np.tan(x)), 2) \
+    / (pow(2, n)* math.factorial(n) * math.sqrt(math.pi) * pow(np.cos(x), 4)) 
+    
 
 def qc():
+    '''
+    (c) uncertainty
+    calculate gaussian quadrature
+    '''
+    N = 100
+    xs, ws = quadrature.gaussxwab(N, -math.pi/2, math.pi/2)
+    fs = integrandc(xs)
+    res = math.sqrt(np.sum(ws * fs))
+    print(f"(c) quantum uncertainty: {res}")
+
+# qc()
+
+def integrandd(x, n = 5):
+    '''
+    integrand of question d
+    input n: energy level
+    '''
+    return  x * x / (pow(2, n)* math.factorial(n) * math.sqrt(math.pi)) * pow(H(n, x), 2)
+
+def qd():
     '''
     uncertainty
     calculate Gauss-Hermite quadrature
     '''
     N = 100 # sample points
     xs, ws = roots_hermite(N)
-    fs = integrandc(xs)
+    fs = integrandd(xs)
     res = math.sqrt(np.sum(ws * fs))
-    print(f"quantum uncertainty: {res}")
+    print(f"(d) quantum uncertainty: {res}")
 
-# qc()
+qd()

@@ -64,27 +64,51 @@ def gaussxwab(N,a,b):
 ############################################################################################################
 #begin my code
 
-def integrand(x):
-    return x
+v = 1e-3 # volume, m^3
+rho = 6.022 * 1e28 # density, m^-3
+theta = 428 # Debye temperature, k
+kb = 1.380649 * 1e-23 # Boltzmann constant, J*K^-1
 
-def gquad(b = 10, N=100):
-    x,w = gaussxw(N)
-    a = 0
-    #xp = 0.5*(b-a)*x + 0.5*(b+a) # sample points, rescaled to bounds a,b
-    #wp = 0.5*(b-a)*w # rescale weights to bounds a, b
-    xp, wp = gaussxwab(N,a,b)
-    s = sum(integrand(xp)*wp) # add them up!
-    return s
+def integrand(x):
+    return pow(x, 4) * np.exp(x)/pow(np.exp(x) - 1, 2)
 
 def cv(T, N=50):
     '''
     heat capacity
     '''
-    
+    xs, ws = gaussxwab(N, 0, theta/T)
+    fs = integrand(xs)
+    return np.sum(ws * fs) * 9 * v * rho * kb * pow(T/theta, 3)
+
+def qb():
+    Ts = np.linspace(5, 500, 496) # T from 5K to 500K, 496 steps
+    cvs = []
+    for T in Ts:
+        cvs.append(cv(T))
+    cvs = np.array(cvs)
+    plt.plot(Ts, cvs)
+    plt.xlabel("T(K)")
+    plt.ylabel("heat capacity (J/K)")
+    plt.title("Heat Capacity to Temperature, N = 50")
+    plt.savefig("heatcapacity50.png")
+    plt.clf()
+
+def qc():
+    Ts = np.linspace(5, 500, 496) # T from 5K to 500K, 496 steps
+    Ns = [10, 20, 30, 40, 50, 60, 70]
+    for N in Ns:
+        cvs = []
+        for T in Ts:
+            cvs.append(cv(T, N))
+        cvs = np.array(cvs)
+        plt.plot(Ts, cvs, label = f"N = {N}")
+    plt.xlabel("T(K)")
+    plt.ylabel("heat capacity (J/K)")
+    plt.legend()
+    plt.title("Heat Capacity to Temperature")
+    plt.savefig("heatcapacity.png")   
+    plt.clf()
+
 if __name__ == "__main__":
-    x = np.linspace(0,10,100)
-    I = [gquad(xi) for xi in x]
-    plt.plot(x,I)
-    plt.plot(x, 0.5*x**2, linestyle = '--')
-    plt.xlabel('x')
-    plt.ylabel(r'f(x)')
+    # qb()
+    qc()
