@@ -19,6 +19,9 @@ def H(n,x):
         return 2*x
     else:
         return 2*x*H(n-1, x)-2*(n-1)*H(n-2, x)
+    
+def wave(n, x):
+    return 1 / np.sqrt(pow(2, n)* math.factorial(n) * np.sqrt(math.pi)) * np.exp(- x * x / 2) * H(n, x)
 
 def qa():  
     '''
@@ -27,30 +30,27 @@ def qa():
     ns = [0, 1, 2, 3]
     xs = np.linspace(-4, 4, 100)
     for n in ns:
-        hs = H(n, xs)
-        plt.plot(xs, hs, label = f"n = {n}")
+        waves = wave(n, xs)
+        plt.plot(xs, waves, label = f"n = {n}")
     plt.legend()
-    plt.title("Hermite Polynomials")
+    plt.title("Wave Functions")
     plt.xlabel("x")
-    plt.ylabel("H(n, x)")
-    plt.savefig("hermite.png")
+    plt.ylabel("psi(n, x)")
+    plt.savefig("wavefunctions.png")
     plt.clf()
-
-# qa()
 
 def qb():
     '''
     question b
     '''
     xs = np.linspace(-10, 10, 300)
-    hs = H(30, xs)
-    plt.plot(xs, hs)
-    plt.title("Hermite Polynomial (n = 30)")
+    waves = wave(30, xs)
+    plt.plot(xs, waves)
+    plt.title("Wave Functions (n = 30)")
     plt.xlabel("x")
-    plt.ylabel("H(30, x)")
-    plt.savefig("hermite30.png")
-
-# qb()
+    plt.ylabel("psi(30, x)")
+    plt.savefig("wavefunction30.png")
+    plt.clf()
 
 def integrandc(x, n = 5):
     '''
@@ -72,8 +72,6 @@ def qc():
     res = math.sqrt(np.sum(ws * fs))
     print(f"(c) quantum uncertainty: {res}")
 
-# qc()
-
 def integrandd(x, n = 5):
     '''
     integrand of question d
@@ -92,4 +90,5 @@ def qd():
     res = math.sqrt(np.sum(ws * fs))
     print(f"(d) quantum uncertainty: {res}")
 
-qd()
+qa()
+qb()
