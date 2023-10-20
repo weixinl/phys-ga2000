@@ -39,3 +39,11 @@
 !ps-4/uncertainty.py
 !ps-4/wavefunctions.png
 !ps-4/wavefunction30.png
+
+!/ps-5
+/ps-5/*
+!ps-5/gamma.py
+!ps-5/quadrature.py
+!ps-5/integrand.png
+!ps-5/signal.png
+!ps-5/signalanalysis.py
