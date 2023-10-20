@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.fft import fft, fftfreq
+
 
 # source: https://stackoverflow.com/questions/46473270/import-dat-file-as-an-array
 def is_float(string):
@@ -103,9 +105,109 @@ def qc():
     plt.xlabel("time (1e9*unit)")
     plt.ylabel("signal")
     plt.savefig("residual-third-order-poly.png")
-    
+    plt.clf()
+
+def poly_fit(order = 4):
+    '''
+    fit the data using a polynomial of spacified order
+    return the condition number which is the ratio between the maximum and minimun singular values
+    '''
+    time_arr_scaled = time_arr / 1e9
+    T = np.ones((data_num, order + 1))
+    # T[:,1] = time_arr_scaled
+    # T[:,2] = pow(time_arr_scaled, 2)
+    # T[:,3] = pow(time_arr_scaled, 3)
+    for i in range(order + 1):
+        T[:, i] = pow(time_arr_scaled, i)
+    Y = signal_arr
+    (u, w, vt) = np.linalg.svd(T, full_matrices=False)
+    T_inv = vt.transpose().dot(np.diag(1. / w)).dot(u.transpose())
+    A = T_inv.dot(Y)
+    print(f"order {order} polynomial fit (time scaled by 1e-9): {A}")
+    ys = T.dot(A)
+    plt.scatter(time_arr_scaled, ys, s=1, label = f"order {order} polynomial fit")
+    plt.scatter(time_arr_scaled, signal_arr, s=1, label = "original signal")
+    plt.title(f"Order {order} Polynomial Fit (time scaled by 1e-9)")
+    plt.legend()
+    plt.xlabel("time (1e9*unit)")
+    plt.ylabel("signal")
+    plt.savefig(f"order-{order}-poly-time-scaled.png")
+    plt.clf()
+    return w[0]/w[order]
+
+def qd():
+    print(f"condition number: {poly_fit(19)}")
+
+def qe():
+    '''
+    fit sin and cos functions plus a zero-point offset
+    find period by fourier transformation from hint
+    substract trend to get flat signal from hint
+    '''
+    time_arr_scaled = time_arr / 1e9
+    #estimate linear trend, which is a first-order polynomial fit
+    T = np.ones((data_num, 2))
+    T[:,1] = time_arr_scaled
+    Y = signal_arr
+    (u, w, vt) = np.linalg.svd(T, full_matrices=False)
+    T_inv = vt.transpose().dot(np.diag(1. / w)).dot(u.transpose())
+    A = T_inv.dot(Y)
+    ys = T.dot(A)
+    plt.scatter(time_arr_scaled, ys, s=1, label = "linear fit")
+    plt.scatter(time_arr_scaled, signal_arr, s=1, label = "original signal")
+    plt.title("Linear Trend")
+    plt.legend()
+    plt.xlabel("time (1e9*unit)")
+    plt.ylabel("signal")
+    plt.savefig("linear-trend.png")
+    plt.clf()
+
+    # flat signal (residuals after linear fit)
+    flat_signal = Y - ys
+    plt.scatter(time_arr_scaled, flat_signal, s = 1)
+    plt.title("Flat Signal")
+    plt.xlabel("time (1e9*unit)")
+    plt.ylabel("signal")
+    plt.savefig("flat-signal.png")
+    plt.clf()
+
+    # get frequency by fourier transform
+    T = time_arr_scaled[1]-time_arr_scaled[0]
+    yf = fft(flat_signal)
+    xf = fftfreq(data_num, T)[:data_num//2]
+    plt.scatter(xf, 2.0/data_num * np.abs(yf[0:data_num//2]), s=1)
+    plt.grid()
+    plt.xlim(0,10)
+    omega = 2*np.pi*xf[np.argsort(2.0/data_num * np.abs(yf[0:data_num//2]))[::-1]][0]
+    plt.vlines(omega/(2*np.pi), 0, 10, color = 'red')
+    plt.title("Fourier Transform")
+    plt.xlabel("omega")
+    plt.ylabel("f(omega)")
+    plt.savefig("fourier.png")
+    plt.clf()
+
+    # fit on full signal
+    T = np.ones((data_num, 4))
+    T[:,1] = time_arr_scaled
+    T[:,2] = np.cos(omega*time_arr_scaled)
+    T[:,3] = np.sin(omega*time_arr_scaled)
+    Y = signal_arr
+    (u, w, vt) = np.linalg.svd(T, full_matrices=False)
+    T_inv = vt.transpose().dot(np.diag(1. / w)).dot(u.transpose())
+    A = T_inv.dot(Y)
+    ys = T.dot(A)
+    plt.scatter(time_arr, ys, s=1, label = "trigonometric fit")
+    plt.scatter(time_arr, signal_arr, s=1, label = "original signal")
+    plt.title("Trigonometric Fit")
+    plt.legend()
+    plt.xlabel("time")
+    plt.ylabel("signal")
+    plt.savefig("trigonometric.png")
+    plt.clf()
 
 # qa()
 # qb()
 # qb_time_scaled()
-qc()
+# qc()
+# qd()
+qe()
