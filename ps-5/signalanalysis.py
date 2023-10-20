@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy
 from scipy.fft import fft, fftfreq
 
 
@@ -172,19 +173,38 @@ def qe():
     plt.clf()
 
     # get frequency by fourier transform
-    T = time_arr_scaled[1]-time_arr_scaled[0]
-    yf = fft(flat_signal)
+    data_arr = np.zeros((data_num, 2))
+    data_arr[:,0] = time_arr_scaled
+    data_arr[:,1] = flat_signal
+    data_sorted = data_arr[data_arr[:, 0].argsort()] # sort by time
+    T = (data_sorted[data_num - 1][0]-data_sorted[0][0])/999
+    time_arr_interpolate = np.array(range(data_num))*T
+    # f_interpolate = scipy.interpolate.interp1d(data_sorted[:,0], data_sorted[:, 1], kind = 5, fill_value="extrapolate")
+    signal_arr_interpolate = np.interp(time_arr_interpolate, data_sorted[:,0], data_sorted[:, 1])
+    # signal_arr_interpolate = f_interpolate(time_arr_interpolate)
+    plt.scatter(time_arr_interpolate, signal_arr_interpolate, s=1)
+    # plt.scatter(time_arr, signal_arr, s=1, label = "original signal")
+    plt.title("Interpolation")
+    # plt.legend()
+    plt.xlabel("time (1e9*unit)")
+    plt.ylabel("signal")
+    plt.savefig("interpolation.png")
+    plt.clf()
+    yf = fft(signal_arr_interpolate)
     xf = fftfreq(data_num, T)[:data_num//2]
-    plt.scatter(xf, 2.0/data_num * np.abs(yf[0:data_num//2]), s=1)
+    # print("yf:")
+    # print(yf)
+    plt.scatter(xf, 2.0/data_num * np.abs(yf[0:data_num//2]), s=10)
     plt.grid()
     plt.xlim(0,10)
     omega = 2*np.pi*xf[np.argsort(2.0/data_num * np.abs(yf[0:data_num//2]))[::-1]][0]
     plt.vlines(omega/(2*np.pi), 0, 10, color = 'red')
     plt.title("Fourier Transform")
-    plt.xlabel("omega")
+    plt.xlabel("omega/(2*pi)")
     plt.ylabel("f(omega)")
     plt.savefig("fourier.png")
     plt.clf()
+    print(f"omega: {omega}")
 
     # fit on full signal
     T = np.ones((data_num, 4))
@@ -200,9 +220,19 @@ def qe():
     plt.scatter(time_arr, signal_arr, s=1, label = "original signal")
     plt.title("Trigonometric Fit")
     plt.legend()
-    plt.xlabel("time")
+    plt.xlabel("time (1e9*unit)")
     plt.ylabel("signal")
     plt.savefig("trigonometric.png")
+    plt.clf()
+    print(f"trigonometric fit (time scaled by 1e-9): {A[0]} + {A[1]}t + {A[2]}cos({omega}t) + {A[3]}sin({omega}t)")
+
+    print(f"period: {2*np.pi/omega}")
+    residuals = signal_arr - ys
+    plt.scatter(time_arr_scaled, residuals, s = 1)
+    plt.title("Residuals after Trigonometric Fit")
+    plt.xlabel("time (1e9*unit)")
+    plt.ylabel("residual signal")
+    plt.savefig("residual-trigonometric.png")
     plt.clf()
 
 # qa()
