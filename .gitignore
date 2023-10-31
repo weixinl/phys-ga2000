@@ -57,3 +57,8 @@
 !ps-5/third-order-poly-time-scaled.png
 !ps-5/third-order-poly.png
 !ps-5/trigonometric.png
+
+!/ps-6
+/ps-6/*
+!ps-6/pca.py
+!ps-6/imgs
