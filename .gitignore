@@ -62,3 +62,4 @@
 /ps-6/*
 !ps-6/pca.py
 !ps-6/imgs
+!ps-6/res
