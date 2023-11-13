@@ -63,3 +63,8 @@
 !ps-6/pca.py
 !ps-6/imgs
 !ps-6/res
+
+!/ps-7
+/ps-7/*
+!ps-7/brent.py
+!ps-7/imgs
