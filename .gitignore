@@ -68,3 +68,4 @@
 /ps-7/*
 !ps-7/brent.py
 !ps-7/imgs
+!ps-7/likelihood.py

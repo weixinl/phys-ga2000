@@ -6,6 +6,8 @@ import timeit
 golden_ratio = 0.38197
 tol = 1e-7 # tolerance
 epsilon = 1e-7 #for numerical stability
+xmin_list = []
+err_list = []
 
 def f(x):
     '''
@@ -41,6 +43,8 @@ def golden_section(a, b):
             # c, x, b
             a = c
             c = x
+        xmin_list.append(c)
+        err_list.append(b-a)
     return c
 
 
@@ -84,6 +88,8 @@ def brent():
             else:
                 # a c d
                 b = d
+        xmin_list.append(c)
+        err_list.append(b-a)
     return c
 
 
@@ -97,8 +103,8 @@ def myplot(b_list, err_list):
     ax1.plot(range(len(err_list)), log_err,'.-')
     ax1.set_xlabel('number of iterations')
     ax0.set_ylabel(r'$x_{min}$')
-    ax1.set_ylabel(r'$\log{\delta}$')
-    plt.savefig('convergence.png')
+    ax1.set_ylabel(r'$\log{error}$')
+    plt.savefig('imgs/convergence.png')
     
 if __name__ == "__main__":
     start_time = timeit.default_timer()
@@ -109,3 +115,4 @@ if __name__ == "__main__":
     scipytime = timeit.default_timer() - start_time
     print(f"my result: {myres}, time: {mytime}")
     print(f"scipy result: {scipyres}, time: {scipytime}")
+    myplot(xmin_list, err_list)
