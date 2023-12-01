@@ -69,3 +69,9 @@
 !ps-7/brent.py
 !ps-7/imgs
 !ps-7/likelihood.py
+
+!/ps-8
+/ps-8/*
+!ps-8/fourier.py
+!ps-8/lorenz.py
+!ps-8/imgs/*
