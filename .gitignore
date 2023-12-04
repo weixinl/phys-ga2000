@@ -75,3 +75,8 @@
 !ps-8/fourier.py
 !ps-8/lorenz.py
 !ps-8/imgs/*
+
+!/ps-9
+/ps-9/*
+!ps-9/schrodinger.py
+!ps-9/banded.py
